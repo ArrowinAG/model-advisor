@@ -1,8 +1,7 @@
 [build]
-  base = "MODEL ADVISOR"
   command = "echo 'Build complete'"
-  publish = "."
-  functions = "netlify/functions"
+  publish = "MODEL ADVISOR"
+  functions = "MODEL ADVISOR/netlify/functions"
 
 [[redirects]]
   from = "/api/*"
