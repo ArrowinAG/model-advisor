@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Advisor - Find Your Perfect AI Model</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0f1a;
+            --bg-secondary: #131a2a;
+            --bg-tertiary: #1a2236;
+            --accent-primary: #00d9ff;
+            --accent-secondary: #0099ff;
+            --accent-glow: #00d9ff;
+            --text-primary: #e8eef5;
+            --text-secondary: #a0aabf;
+            --text-muted: #7a8499;
+            --border-color: #1f2a3a;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0d1524 50%, #0a0f1a 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 153, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+            animation: glow 8s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2.2em;
+            }
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out 0.1s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            opacity: 0.5;
+        }
+
+        .card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-section h2 {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            font-weight: 500;
+            color: var(--text-primary);
+            letter-spacing: 0.3px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-family: inherit;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="number"]::placeholder,
+        textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.15);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d9ff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 28px;
+            font-size: 0.95em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: var(--bg-dark);
+            box-shadow: 0 4px 20px rgba(0, 217, 255, 0.2);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-dark);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .results-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 500px;
+        }
+
+        .loading {
+            text-align: center;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 30px;
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            color: var(--text-secondary);
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .loading p:last-child {
+            font-size: 0.9em;
+            color: var(--text-muted);
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            color: #fca5a5;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .recommendations {
+            width: 100%;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .recommendations h2 {
+            font-size: 1.6em;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .cost-breakdown {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.05) 0%, rgba(0, 153, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 24px;
+            border-radius: 12px;
+            margin: 25px 0;
+        }
+
+        .cost-breakdown h3 {
+            color: var(--accent-primary);
+            margin-bottom: 18px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95em;
+        }
+
+        .cost-row:last-child {
+            border-bottom: none;
+        }
+
+        .cost-label {
+            color: var(--text-secondary);
+        }
+
+        .cost-value {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            opacity: 0.6;
+        }
+
+        .empty-state p {
+            font-size: 1.05em;
+            color: var(--text-secondary);
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-export {
+            flex: 1;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 217, 255, 0.25);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer p {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .footer p:last-child {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 153, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: var(--accent-primary);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ Model Advisor</h1>
+            <p>Find your perfect AI model. Fast, intelligent, and completely free recommendations tailored to your needs.</p>
+        </header>
+
+        <div class="main-content">
+            <div class="card form-section">
+                <h2>Your Requirements</h2>
+
+                <div class="info-box">
+                    <strong>💡 Tip:</strong> Be specific about your needs and we'll find the perfect match.
+                </div>
+
+                <form id="recommendationForm">
+                    <div class="form-group">
+                        <label for="useCase">What are you building? *</label>
+                        <input type="text" id="useCase" placeholder="e.g., chatbot, content generator, code analyzer" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Additional details (optional)</label>
+                        <textarea id="description" placeholder="Any specific requirements?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="volume">Expected monthly usage *</label>
+                        <select id="volume" required>
+                            <option value="">— Select usage level —</option>
+                            <option value="light">Light (< 100 requests/day)</option>
+                            <option value="medium">Medium (100 - 1,000 requests/day)</option>
+                            <option value="heavy">Heavy (1,000+ requests/day)</option>
+                            <option value="custom">Custom usage</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="customVolumeGroup" style="display: none;">
+                        <label for="customVolume">Monthly requests</label>
+                        <input type="number" id="customVolume" placeholder="e.g., 50000" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="budget">Your budget *</label>
+                        <input type="text" id="budget" placeholder="e.g., $100, $500, or 'any'" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="priorities">What matters most?</label>
+                        <input type="text" id="priorities" placeholder="e.g., cost, speed, accuracy">
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary">Search Models</button>
+                        <button type="reset" class="btn-secondary">Clear</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card results-section" id="resultsSection">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎯</div>
+                    <p>Enter your requirements to discover the ideal model for your use case</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🚀 Completely free • Community-driven • Open source</p>
+            <p>Powered by Groq API • Always zero cost</p>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_URL = window.location.origin;
+        const form = document.getElementById('recommendationForm');
+        const volumeSelect = document.getElementById('volume');
+        const customVolumeGroup = document.getElementById('customVolumeGroup');
+        const resultsSection = document.getElementById('resultsSection');
+
+        volumeSelect.addEventListener('change', function() {
+            customVolumeGroup.style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            await getRecommendations();
+        });
+
+        async function getRecommendations() {
+            const useCase = document.getElementById('useCase').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const volume = document.getElementById('volume').value;
+            const customVolume = document.getElementById('customVolume').value;
+            const budget = document.getElementById('budget').value.trim();
+            const priorities = document.getElementById('priorities').value.trim();
+
+            if (!useCase || !volume || !budget) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            resultsSection.innerHTML = `<div class="loading"><div class="spinner"></div><p>Finding the perfect models for you...</p><p>This takes about 30-60 seconds</p></div>`;
+
+            try {
+                const requestData = {use_case: useCase, description, volume, custom_volume: customVolume || null, budget, priorities, timestamp: new Date().toISOString()};
+                const response = await fetch(`${BACKEND_URL}/api/recommend`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(requestData)});
+                if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                resultsSection.innerHTML = `<div><div class="error"><strong>Connection Error</strong><br>${error.message}<br><br><em>Ensure the backend server is running</em></div></div>`;
+            }
+        }
+
+        function displayResults(data) {
+            let html = `<div class="recommendations"><h2>🎯 Your Recommendations</h2><div class="cost-breakdown"><h3>💰 Estimated Monthly Costs</h3>`;
+            if (data.cost_estimate) {
+                html += `<div class="cost-row"><span class="cost-label">Light usage:</span><span class="cost-value">${data.cost_estimate.light || 'N/A'}</span></div><div class="cost-row"><span class="cost-label">Medium usage:</span><span class="cost-value">${data.cost_estimate.medium || 'N/A'}</span></div><div class="cost-row"><span class="cost-label">Heavy usage:</span><span class="cost-value">${data.cost_estimate.heavy || 'N/A'}</span></div>`;
+            }
+            html += `</div><div style="margin-top: 20px; line-height: 1.8; color: var(--text-secondary);">`;
+            if (data.recommendations) html += `<div style="white-space: pre-wrap;">${escapeHtml(data.recommendations)}</div>`;
+            html += `</div><div class="export-buttons"><button class="btn-export" onclick="copyToClipboard()">📋 Copy</button><button class="btn-export" onclick="shareResults()">🔗 Share</button><button class="btn-export" onclick="window.print()">🖨️ Print</button></div></div>`;
+            resultsSection.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(resultsSection.innerText).then(() => alert('✓ Copied to clipboard!'));
+        }
+
+        function shareResults() {
+            const url = window.location.href;
+            const text = 'Check out my AI model recommendations!';
+            if (navigator.share) {
+                navigator.share({title: 'Model Advisor', text, url});
+            } else {
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+            }
+        }
+    </script>
+</body>
+</html>
